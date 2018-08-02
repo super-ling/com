@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .box{
+            width: 590px;
+            height: 470px;
+            position: relative;
+            margin: 50px auto;
+        }
+        ul,ol{
+            list-style: none;
+        }
+        ul li{
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+        span{
+            width: 30px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            margin-top: -25px;
+            color: #fff;
+            font-size: 30px;
+            font-family: '黑体';
+            background-color: rgba(0,0,0,0.3);
+            position: absolute;
+            top:50%;
+            cursor: pointer;
+        }
+        span:hover{
+            background-color: rgba(0,0,0,0.5);
+        }
+        .prev{
+            left: 0;
+        }
+        .next{
+            right: 0;
+        }
+        ol{
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+        }
+        ol li{
+            width: 6px;
+            height: 6px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            float: left;
+            margin-right: 10px;
+        }
+        .active{
+            background-color: #fff;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+     <div class="box">
+         <ul></ul>
+         <span class="prev"><</span>
+         <span class="next">></span>
+         <ol></ol>
+     </div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.0/jquery.js"></script>
+<script>
+    var data=[
+        'images/1.jpg',
+        'images/7.jpg',
+        'images/8.jpg',
+        'images/4.jpg',
+        'images/5.jpg'
+    ];//模拟服务器返回的数据
+    var ulLi='';
+    var olLi='';
+    for(var i=0;i<data.length;i++){
+        ulLi += '<li><img src="'+data[i]+'" alt=""></li>';
+        olLi += '<li></li>';
+    }
+    $('ul').html(ulLi);
+    $('ol').html(olLi);
+    $('ul li').eq(0).show();
+    $('ol li').eq(0).addClass('active');
+    function play(){
+        index=index>data.length-1?0:index;
+        index=index<0?data.length-1:index;
+        //让一张图片显示出来，其他图片隐藏掉
+        //让当前图片淡入，其他的所有淡出
+        $('ul li').eq(index).fadeIn().siblings().fadeOut();
+        $('ol li').eq(index).addClass('active').siblings().removeClass('active');
+    }
+    var index=0;//控制变量 控制当前轮播图播放到了第几张
+    var timer=null;
+    timer=setInterval(function(){
+        index++;
+        play();
+    },2000)
+    $('.box').hover(function(){
+        clearInterval(timer);
+    },function(){
+        timer=setInterval(function(){
+            index++;
+            play();
+        },2000)
+    })
+    $('.prev').on('click',function(){
+        index--;
+        play();
+    })
+    $('.next').on('click',function(){
+        index++;
+        play();
+    })
+    $('ol li').on('mouseenter',function(){
+        index=$(this).index();
+        play();
+    })
+</script>
+</html>
